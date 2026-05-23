@@ -24,7 +24,7 @@
   .container { max-width: 720px; margin: 0 auto; }
   .header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 28px; padding-bottom: 18px; border-bottom: 1.5px solid var(--moss); position: relative; }
   .header::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 60px; height: 1.5px; background: var(--moss); }
-  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand { display: flex; align-items: center; gap: 10px; cursor: pointer; }
   .brand-mark { width: 32px; height: 32px; color: var(--moss); }
   .brand-text { font-family: 'Gowun Batang', serif; font-weight: 700; font-size: 18px; color: var(--moss-dark); }
   .brand-text .em { color: var(--rust); font-style: italic; }
@@ -64,7 +64,11 @@
   .play-choice.selected .number { color: var(--paper); }
   .play-choice .number { font-family: 'Gowun Batang', serif; font-weight: 700; font-size: 18px; flex-shrink: 0; color: var(--moss); line-height: 1.5; }
 
-  .subj-input { width: 100%; font-family: 'Noto Serif KR', serif; font-size: 16px; padding: 14px 16px; border: 1.5px solid var(--moss-dark); background: var(--paper); color: var(--ink); outline: none; line-height: 1.6; min-height: 110px; resize: vertical; box-shadow: 3px 3px 0 var(--moss-dark); margin-bottom: 14px; }
+  .play-choice.correct-ans { background: rgba(74,103,65,0.15); border-color: var(--moss); color: var(--moss-dark); }
+  .play-choice.correct-ans .number { color: var(--moss); }
+  .play-choice.wrong-ans { background: rgba(184,92,56,0.12); border-color: var(--rust); color: var(--rust); }
+  .play-choice.wrong-ans .number { color: var(--rust); }
+  .play-choice.correct-ans:hover, .play-choice.wrong-ans:hover { transform: none; box-shadow: 3px 3px 0 var(--moss-dark); cursor: default; } font-family: 'Noto Serif KR', serif; font-size: 16px; padding: 14px 16px; border: 1.5px solid var(--moss-dark); background: var(--paper); color: var(--ink); outline: none; line-height: 1.6; min-height: 110px; resize: vertical; box-shadow: 3px 3px 0 var(--moss-dark); margin-bottom: 14px; }
   .subj-input:focus { border-color: var(--rust); box-shadow: 4px 4px 0 var(--rust); }
 
   .answer-reveal { background: rgba(74,103,65,0.10); border: 1.5px solid var(--moss); border-left: 4px solid var(--moss); padding: 18px 20px; margin-bottom: 16px; animation: revealIn 0.35s ease; }
@@ -132,7 +136,7 @@
 <body>
 <div class="container">
   <header class="header">
-    <div class="brand">
+    <div class="brand" onclick="if(allQuestions.length>0) goto('intro')" title="처음으로">
       <svg class="brand-mark" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
         <path d="M16 28 L16 18" stroke-linecap="round"/>
         <path d="M16 18 C 10 18, 7 14, 8 8 C 13 9, 16 12, 16 18" fill="currentColor" fill-opacity="0.15"/>
@@ -168,12 +172,12 @@
   <section class="screen" id="screen-intro">
     <div class="intro">
       <div class="intro-tag">— 숲해설가 이론 학습</div>
-      <h1>오늘의 <span style="color: var(--rust);">스무 문항</span></h1>
-      <p class="desc">전체 문제 풀에서 무작위로 추출한 문항입니다. 한 번 풀이를 마치고 다시 시작하면 새로운 세트가 출제됩니다.</p>
+      <h1>오늘의 <span style="color: var(--rust);">열 문항</span></h1>
+      <p class="desc">전체 문제에서 무작위로 추출한 문항입니다. 한 번 풀이를 마치고 다시 시작하면 새로운 세트가 출제됩니다.</p>
     </div>
     <div class="quiz-info">
-      <div class="quiz-info-row"><span class="key">출제 문항</span><span class="val accent" id="introCount">20</span></div>
-      <div class="quiz-info-row"><span class="key">전체 풀</span><span class="val" id="introPool"></span></div>
+      <div class="quiz-info-row"><span class="key">출제 문항</span><span class="val accent" id="introCount">10</span></div>
+      <div class="quiz-info-row"><span class="key">전체 문제</span><span class="val" id="introPool"></span></div>
       <div class="quiz-info-row"><span class="key">구성</span><span class="val" id="introMix"></span></div>
       <div class="quiz-info-row"><span class="key">제한 시간</span><span class="val">없음</span></div>
     </div>
@@ -182,7 +186,7 @@
 
   <section class="screen" id="screen-play">
     <div class="play-header">
-      <span>오늘의 20문항</span>
+      <span>오늘의 10문항</span>
       <span id="playProgress">0 / 0</span>
     </div>
     <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
@@ -202,8 +206,9 @@
     <div class="result-percent" id="resultPercent"></div>
     <div class="result-breakdown" id="resultBreakdown"></div>
     <div class="btn-row" style="justify-content: center;">
-      <button class="btn" onclick="reviewQuiz()">답안 검토</button>
-      <button class="btn btn-primary" onclick="restartPlay()">새로운 20문항</button>
+      <button class="btn" onclick="reviewQuiz()">오답 확인</button>
+      <button class="btn btn-rust" onclick="retryPlay()">다시 풀기</button>
+      <button class="btn btn-primary" onclick="restartPlay()">새로운 10문항</button>
     </div>
   </section>
 
@@ -212,6 +217,7 @@
     <div id="reviewList"></div>
     <div class="btn-row" style="margin-top: 28px;">
       <button class="btn btn-primary" onclick="goto('result')">← 결과 화면으로</button>
+      <button class="btn" onclick="restartPlay()">새로운 10문항</button>
     </div>
   </section>
 </div>
@@ -224,7 +230,7 @@
   let allQuestions = [];
   let quizSet = [];
   let playState = { current: 0, answers: [], revealed: [], selfJudge: [] };
-  const QUIZ_SIZE = 20;
+  const QUIZ_SIZE = 10;
   const JSON_PATH = 'questions.json';
 
   function goto(screen) {
@@ -302,6 +308,18 @@
     goto('play');
   }
 
+  // 같은 문제 세트로 다시 풀기
+  function retryPlay() {
+    playState = {
+      current: 0,
+      answers: new Array(quizSet.length).fill(null),
+      revealed: new Array(quizSet.length).fill(false),
+      selfJudge: new Array(quizSet.length).fill(null)
+    };
+    renderPlayQuestion();
+    goto('play');
+  }
+
   function restartPlay() { startPlay(); }
 
   function renderPlayQuestion() {
@@ -324,15 +342,29 @@
   function renderObjectiveBody(i, q) {
     const numerals = ['①','②','③','④'];
     const selected = playState.answers[i];
+    const answered = selected !== null;
     document.getElementById('playBody').innerHTML = `
       <div class="play-choices">
         ${q.choices.map((c, j) => {
           if (!c.trim()) return '';
-          return `<button class="play-choice ${selected === j ? 'selected' : ''}" onclick="selectChoice(${j})">
+          let cls = '';
+          if (answered) {
+            if (j === q.answer) cls = 'correct-ans';
+            else if (j === selected) cls = 'wrong-ans';
+          } else if (selected === j) {
+            cls = 'selected';
+          }
+          const disabled = answered ? 'style="pointer-events:none;"' : '';
+          return `<button class="play-choice ${cls}" onclick="selectChoice(${j})" ${disabled}>
               <span class="number">${numerals[j]}</span><span>${escHtml(c)}</span>
             </button>`;
         }).join('')}
-      </div>`;
+      </div>
+      ${answered && selected !== q.answer ? `<div class="answer-reveal" style="margin-top: 0;">
+        <div class="label-row">◆ 정답</div>
+        <div class="answer-text">${escHtml(q.choices[q.answer])}</div>
+      </div>` : ''}
+    `;
     renderPlayFooter();
   }
 
@@ -378,7 +410,11 @@
     document.getElementById('playFooter').innerHTML = `${prevBtn}<button class="btn btn-rust" onclick="nextQuestion()" ${canProceed ? '' : 'disabled'} style="flex: 1;">${nextLabel}</button>`;
   }
 
-  function selectChoice(idx) { playState.answers[playState.current] = idx; renderPlayQuestion(); }
+  function selectChoice(idx) {
+    if (playState.answers[playState.current] !== null) return; // 이미 선택됨
+    playState.answers[playState.current] = idx;
+    renderPlayQuestion();
+  }
   function updateSubjInput(i, val) { playState.answers[i] = val; renderPlayFooter(); }
   function revealAnswer(i) { playState.revealed[i] = true; renderPlayQuestion(); }
   function setSelfJudge(i, j) { playState.selfJudge[i] = j; renderPlayQuestion(); }
