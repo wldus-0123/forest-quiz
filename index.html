@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>숲해설가 이론 Quiz — 출제</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Serif+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f3efe4; --paper: #faf6ec; --ink: #1f2a1d;
+    --moss: #4a6741; --moss-dark: #2d4029; --bark: #6b4f3a;
+    --leaf: #7a9b6e; --rust: #b85c38;
+    --muted: #8a8675; --line: #c5beaa;
+    --shadow: 5px 5px 0 var(--moss-dark);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Noto Serif KR', serif; background: var(--bg); color: var(--ink); min-height: 100vh; padding: 20px 14px 60px; line-height: 1.5;
+    background-image:
+      radial-gradient(circle at 15% 5%, rgba(74,103,65,0.10) 0%, transparent 35%),
+      radial-gradient(circle at 90% 90%, rgba(107,79,58,0.08) 0%, transparent 35%);
+  }
+  .container { max-width: 760px; margin: 0 auto; }
+  .header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1.5px solid var(--moss); position: relative; }
+  .header::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 60px; height: 1.5px; background: var(--moss); }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand-mark { width: 30px; height: 30px; color: var(--moss); }
+  .brand-text { font-family: 'Gowun Batang', serif; font-weight: 700; font-size: 17px; color: var(--moss-dark); }
+  .brand-text .em { color: var(--rust); font-style: italic; }
+  .meta { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.18em; }
+
+  /* TOP BAR — 문제 풀 관리 */
+  .top-bar { background: var(--paper); border: 1.5px solid var(--moss-dark); padding: 16px; margin-bottom: 18px; box-shadow: var(--shadow); }
+  .top-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .top-row + .top-row { margin-top: 12px; }
+  .pool-stat {
+    flex: 1;
+    min-width: 180px;
+    font-family: 'Gowun Batang', serif;
+    font-size: 15px;
+    color: var(--moss-dark);
+  }
+  .pool-stat strong { font-size: 24px; color: var(--rust); font-weight: 700; margin-right: 4px; }
+  .pool-stat .sub { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); display: block; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.1em; }
+
+  /* BUTTONS */
+  .btn { font-family: 'Noto Serif KR', serif; font-size: 13px; font-weight: 600; padding: 10px 18px; border: 1.5px solid var(--moss-dark); background: var(--paper); color: var(--moss-dark); cursor: pointer; transition: all 0.15s ease; letter-spacing: 0.02em; white-space: nowrap; }
+  .btn:hover { background: var(--moss-dark); color: var(--paper); }
+  .btn.primary { background: var(--moss); color: var(--paper); border-color: var(--moss); }
+  .btn.primary:hover { background: var(--moss-dark); }
+  .btn.rust { background: var(--rust); color: var(--paper); border-color: var(--rust); }
+  .btn.rust:hover { background: #9a4a2c; border-color: #9a4a2c; }
+  .btn.ghost { background: transparent; }
+  .btn-big { padding: 14px 22px; font-size: 14px; box-shadow: var(--shadow); }
+  .btn-big:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 var(--moss-dark); }
+  .btn-big:active { transform: translate(1px, 1px); box-shadow: 3px 3px 0 var(--moss-dark); }
+
+  /* SEARCH */
+  .search-row { display: flex; gap: 8px; }
+  .search-input {
+    flex: 1;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 14px;
+    padding: 9px 12px;
+    border: 1.5px solid var(--line);
+    background: var(--paper);
+    color: var(--ink);
+    outline: none;
+  }
+  .search-input:focus { border-color: var(--moss); }
+  .filter-select {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 8px 10px;
+    border: 1.5px solid var(--line);
+    background: var(--paper);
+    color: var(--moss-dark);
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* INPUTS */
+  .field { margin-bottom: 16px; }
+  .label { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; display: block; margin-bottom: 8px; color: var(--moss); }
+  .input, .textarea { width: 100%; font-family: 'Noto Serif KR', serif; font-size: 15px; padding: 11px 13px; border: 1.5px solid var(--line); background: var(--paper); color: var(--ink); outline: none; line-height: 1.5; }
+  .input:focus, .textarea:focus { border-color: var(--moss); box-shadow: 3px 3px 0 var(--leaf); }
+  .textarea { resize: vertical; min-height: 60px; }
+
+  /* QUESTION CARD - 컴팩트 리스트 뷰 */
+  .q-list { display: grid; gap: 10px; margin-bottom: 18px; }
+  .q-card {
+    background: var(--paper);
+    border: 1.5px solid var(--moss-dark);
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: all 0.12s;
+    position: relative;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .q-card:hover { box-shadow: 3px 3px 0 var(--moss-dark); transform: translate(-1px, -1px); }
+  .q-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--leaf); }
+  .q-card.subjective::before { background: var(--bark); }
+
+  .q-card-num {
+    font-family: 'Gowun Batang', serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--moss);
+    line-height: 1.4;
+    min-width: 36px;
+  }
+  .q-card.subjective .q-card-num { color: var(--rust); }
+
+  .q-card-body { flex: 1; min-width: 0; }
+  .q-card-text {
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.45;
+    word-break: keep-all;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+  .q-card-text.empty { color: var(--muted); font-style: italic; }
+  .q-card-meta {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    flex-wrap: wrap;
+  }
+  .q-tag {
+    padding: 2px 6px;
+    border: 1px solid currentColor;
+  }
+  .q-tag.obj { color: var(--moss); }
+  .q-tag.subj { color: var(--rust); }
+  .q-tag.img { color: var(--bark); }
+  .q-card-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .icon-btn {
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    transition: all 0.12s;
+  }
+  .icon-btn:hover { background: var(--moss-dark); color: var(--paper); border-color: var(--moss-dark); }
+  .icon-btn.danger:hover { background: var(--rust); border-color: var(--rust); }
+
+  /* PAGINATION */
+  .pagination { display: flex; justify-content: center; align-items: center; gap: 6px; margin: 18px 0; flex-wrap: wrap; }
+  .page-btn {
+    min-width: 34px;
+    height: 34px;
+    border: 1.5px solid var(--line);
+    background: var(--paper);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--moss-dark);
+    cursor: pointer;
+    padding: 0 10px;
+    transition: all 0.12s;
+  }
+  .page-btn:hover:not(:disabled) { border-color: var(--moss-dark); }
+  .page-btn.active { background: var(--moss-dark); color: var(--paper); border-color: var(--moss-dark); }
+  .page-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .page-jump {
+    width: 60px;
+    text-align: center;
+    height: 34px;
+    border: 1.5px solid var(--line);
+    background: var(--paper);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    outline: none;
+  }
+
+  /* EDITOR MODAL/PANEL */
+  .editor-overlay { position: fixed; inset: 0; background: rgba(31,42,29,0.5); display: none; z-index: 100; align-items: flex-start; justify-content: center; padding: 30px 14px; overflow-y: auto; }
+  .editor-overlay.active { display: flex; }
+  .editor-panel {
+    background: var(--bg);
+    border: 1.5px solid var(--moss-dark);
+    box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 720px;
+    padding: 22px;
+    position: relative;
+  }
+  .editor-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1.5px solid var(--moss); }
+  .editor-title { font-family: 'Gowun Batang', serif; font-weight: 700; font-size: 22px; color: var(--moss-dark); }
+  .editor-close { background: none; border: 1.5px solid var(--moss-dark); width: 32px; height: 32px; cursor: pointer; font-size: 16px; color: var(--moss-dark); }
+  .editor-close:hover { background: var(--moss-dark); color: var(--paper); }
+
+  /* TYPE TOGGLE */
+  .type-toggle { display: inline-flex; border: 1.5px solid var(--moss-dark); overflow: hidden; }
+  .type-toggle button { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; padding: 7px 14px; border: none; background: var(--paper); color: var(--moss-dark); cursor: pointer; text-transform: uppercase; letter-spacing: 0.1em; }
+  .type-toggle button.active { background: var(--moss-dark); color: var(--paper); }
+  .type-toggle button + button { border-left: 1.5px solid var(--moss-dark); }
+
+  /* CHOICES */
+  .choices { display: grid; gap: 8px; }
+  .choice-row { display: flex; align-items: center; gap: 10px; }
+  .choice-radio { flex-shrink: 0; width: 28px; height: 28px; border: 1.5px solid var(--moss-dark); background: var(--paper); cursor: pointer; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 12px; color: var(--moss-dark); border-radius: 50%; }
+  .choice-radio.selected { background: var(--moss); color: var(--paper); border-color: var(--moss); }
+  .choice-input { flex: 1; font-family: 'Noto Serif KR', serif; font-size: 14px; padding: 9px 12px; border: 1.5px solid var(--line); background: var(--paper); outline: none; }
+  .choice-input:focus { border-color: var(--moss); }
+
+  /* IMAGE */
+  .image-drop { display: block; border: 1.5px dashed var(--moss); background: rgba(122,155,110,0.05); padding: 18px 14px; text-align: center; cursor: pointer; color: var(--moss); font-size: 13px; line-height: 1.5; }
+  .image-drop:hover { background: rgba(122,155,110,0.12); border-color: var(--moss-dark); }
+  .image-drop.dragover { background: rgba(122,155,110,0.18); border-color: var(--moss-dark); }
+  .image-drop strong { font-family: 'Gowun Batang', serif; font-size: 14px; color: var(--moss-dark); display: block; margin-bottom: 2px; }
+  .image-drop .sub { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+  .image-drop .image-icon { width: 22px; height: 22px; margin: 0 auto 6px; color: var(--leaf); display: block; }
+  .image-drop input[type=file] { display: none; }
+  .image-preview { border: 1.5px solid var(--moss-dark); background: var(--paper); margin-bottom: 8px; }
+  .image-preview img { width: 100%; max-height: 240px; object-fit: contain; display: block; background: #f0ebde; }
+  .image-info { display: flex; justify-content: space-between; align-items: center; padding: 7px 12px; border-top: 1px dashed var(--line); font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+  .image-remove { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; padding: 3px 9px; border: 1px solid var(--rust); background: transparent; color: var(--rust); cursor: pointer; text-transform: uppercase; }
+  .image-remove:hover { background: var(--rust); color: var(--paper); }
+
+  .answer-box { background: rgba(184,92,56,0.06); border: 1.5px solid var(--bark); padding: 12px; }
+  .answer-box .label { color: var(--rust); margin-bottom: 6px; }
+
+  /* EMPTY */
+  .empty-state { background: var(--paper); border: 1.5px dashed var(--moss); padding: 50px 20px; text-align: center; color: var(--muted); margin-bottom: 18px; }
+  .empty-state strong { display: block; font-family: 'Gowun Batang', serif; font-size: 20px; color: var(--moss-dark); margin-bottom: 8px; font-weight: 700; }
+
+  /* TOAST */
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--moss-dark); color: var(--paper); padding: 11px 22px; font-family: 'Noto Serif KR', serif; font-size: 13px; font-weight: 500; opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 200; border-left: 3px solid var(--leaf); max-width: 90vw; }
+  .toast.show { opacity: 1; }
+  .toast.error { border-left-color: var(--rust); }
+
+  /* SHARE INFO */
+  .share-info { background: rgba(74,103,65,0.08); border-left: 4px solid var(--moss); padding: 14px 16px; margin-bottom: 16px; font-size: 13px; color: var(--moss-dark); line-height: 1.7; }
+  .share-info code { font-family: 'JetBrains Mono', monospace; background: rgba(0,0,0,0.05); padding: 2px 6px; font-size: 12px; }
+
+  .hidden-input { display: none; }
+
+  /* PILL ROW */
+  .pill-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+  .pill { padding: 3px 8px; border: 1px solid var(--line); color: var(--moss-dark); }
+
+  /* SETTINGS BUTTON ROW */
+  .action-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .action-row .btn { padding: 12px; font-size: 13px; }
+
+  @media (max-width: 480px) {
+    .action-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header class="header">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M16 28 L16 18" stroke-linecap="round"/>
+        <path d="M16 18 C 10 18, 7 14, 8 8 C 13 9, 16 12, 16 18" fill="currentColor" fill-opacity="0.15"/>
+        <path d="M16 18 C 22 18, 25 14, 24 8 C 19 9, 16 12, 16 18" fill="currentColor" fill-opacity="0.15"/>
+        <path d="M16 20 C 12 20, 10 17, 11 13 C 14 14, 16 16, 16 20" fill="currentColor" fill-opacity="0.25"/>
+        <path d="M16 20 C 20 20, 22 17, 21 13 C 18 14, 16 16, 16 20" fill="currentColor" fill-opacity="0.25"/>
+      </svg>
+      <span class="brand-text">숲해설가 이론 <span class="em">Quiz</span></span>
+    </div>
+    <div class="meta">출제실</div>
+  </header>
+
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <div class="top-row">
+      <div class="pool-stat">
+        <span><strong id="totalCount">0</strong>문제</span>
+        <span class="sub" id="poolBreakdown">객관식 0 · 주관식 0 · 이미지 0</span>
+      </div>
+    </div>
+    <div class="top-row action-row">
+      <button class="btn primary" onclick="openEditor()">＋ 문제 추가</button>
+      <button class="btn" onclick="document.getElementById('fileInput').click()">📂 JSON 불러오기</button>
+      <button class="btn" onclick="saveJSON()">💾 JSON 저장</button>
+      <button class="btn rust" onclick="showShareInfo()">🔗 공유 안내</button>
+    </div>
+    <div class="top-row search-row">
+      <input type="text" class="search-input" id="searchInput" placeholder="문제 내용 검색..." oninput="onSearch()">
+      <select class="filter-select" id="filterSelect" onchange="onFilter()">
+        <option value="all">전체</option>
+        <option value="objective">객관식만</option>
+        <option value="subjective">주관식만</option>
+        <option value="image">이미지 있는것만</option>
+      </select>
+    </div>
+    <input type="file" id="fileInput" class="hidden-input" accept=".json" onchange="loadJSON(this.files[0])">
+  </div>
+
+  <!-- SHARE INFO (initial hidden) -->
+  <div id="shareInfo" class="share-info" style="display: none;">
+    <strong>학습자 공유 방법</strong><br>
+    1. <strong>JSON 저장</strong> 버튼으로 <code>questions.json</code> 파일을 다운로드<br>
+    2. GitHub 저장소의 같은 위치에 업로드 (또는 기존 파일을 덮어쓰기)<br>
+    3. 학습자에게 공유할 링크는: <code id="solveUrl">[GitHub 주소]/solve.html</code><br>
+    4. 학습자가 링크를 열면 자동으로 <strong>랜덤 20문제</strong>가 출제됩니다
+  </div>
+
+  <!-- QUESTION LIST -->
+  <div id="questionList"></div>
+
+  <!-- PAGINATION -->
+  <div class="pagination" id="pagination"></div>
+
+  <!-- HINT -->
+  <div class="pill-row" style="justify-content: center; margin-top: 20px;">
+    <span class="pill">문제를 추가한 뒤 반드시 <strong>JSON 저장</strong>으로 백업하세요</span>
+  </div>
+</div>
+
+<!-- EDITOR -->
+<div class="editor-overlay" id="editorOverlay">
+  <div class="editor-panel">
+    <div class="editor-header">
+      <div class="editor-title" id="editorTitle">문제 추가</div>
+      <button class="editor-close" onclick="closeEditor()">✕</button>
+    </div>
+
+    <div class="field">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <span class="label" style="margin-bottom: 0;">유형</span>
+        <div class="type-toggle">
+          <button id="typeObjBtn" class="active" onclick="setEditorType('objective')">객관식</button>
+          <button id="typeSubjBtn" onclick="setEditorType('subjective')">주관식</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label">질문</label>
+      <textarea class="textarea" id="editQ" placeholder="문제를 입력하세요"></textarea>
+    </div>
+
+    <div class="field" id="imageField">
+      <label class="label">이미지 첨부 (선택)</label>
+      <div id="imageArea"></div>
+    </div>
+
+    <!-- OBJECTIVE -->
+    <div id="objectiveSection">
+      <label class="label">보기 (왼쪽 원을 눌러 정답 지정)</label>
+      <div class="choices" id="editChoices"></div>
+    </div>
+
+    <!-- SUBJECTIVE -->
+    <div id="subjectiveSection" style="display: none;">
+      <div class="answer-box">
+        <div class="field" style="margin-bottom: 12px;">
+          <label class="label">모범 답안</label>
+          <textarea class="textarea" id="editSubjAnswer" placeholder="학습자가 확인할 정답"></textarea>
+        </div>
+        <div class="field" style="margin-bottom: 0;">
+          <label class="label">해설 (선택)</label>
+          <textarea class="textarea" id="editExplain" placeholder="추가 설명"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 10px; margin-top: 20px;">
+      <button class="btn" onclick="closeEditor()" style="flex: 1;">취소</button>
+      <button class="btn primary" onclick="saveEditor()" style="flex: 2;">저장</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // ============ STATE ============
+  let questions = [];  // 전체 문제 풀
+  let filteredIdx = []; // 검색/필터 결과의 인덱스
+  let currentPage = 1;
+  const PER_PAGE = 20;
+  const IMG_MAX = 900;
+  const IMG_QUALITY = 0.72;
+  let editorState = { mode: 'add', index: -1, data: null };
+
+  // ============ TOAST ============
+  function toast(msg, isError = false) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast show' + (isError ? ' error' : '');
+    setTimeout(() => t.classList.remove('show'), 2400);
+  }
+
+  // ============ ESCAPE ============
+  function escHtml(str) {
+    return (str || '').replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+  }
+
+  // ============ STATS & RENDER ============
+  function updateStats() {
+    document.getElementById('totalCount').textContent = questions.length;
+    const obj = questions.filter(q => q.type !== 'subjective').length;
+    const subj = questions.filter(q => q.type === 'subjective').length;
+    const img = questions.filter(q => q.img).length;
+    document.getElementById('poolBreakdown').textContent =
+      `객관식 ${obj} · 주관식 ${subj} · 이미지 ${img}`;
+  }
+
+  function applyFilter() {
+    const search = document.getElementById('searchInput').value.trim().toLowerCase();
+    const filter = document.getElementById('filterSelect').value;
+    filteredIdx = [];
+    questions.forEach((q, i) => {
+      // 타입 필터
+      if (filter === 'objective' && q.type === 'subjective') return;
+      if (filter === 'subjective' && q.type !== 'subjective') return;
+      if (filter === 'image' && !q.img) return;
+      // 검색
+      if (search) {
+        const text = (q.q || '').toLowerCase();
+        const choicesText = (q.choices || []).join(' ').toLowerCase();
+        const ansText = q.type === 'subjective' ? (q.answer || '').toLowerCase() : '';
+        if (!text.includes(search) && !choicesText.includes(search) && !ansText.includes(search)) return;
+      }
+      filteredIdx.push(i);
+    });
+  }
+
+  function renderList() {
+    applyFilter();
+    const totalPages = Math.max(1, Math.ceil(filteredIdx.length / PER_PAGE));
+    if (currentPage > totalPages) currentPage = totalPages;
+
+    const wrap = document.getElementById('questionList');
+    if (questions.length === 0) {
+      wrap.innerHTML = `<div class="empty-state">
+        <strong>아직 문제가 없습니다</strong>
+        위쪽 <strong>＋ 문제 추가</strong> 버튼으로 시작하거나,<br>
+        기존 <code>questions.json</code> 파일을 불러오세요.
+      </div>`;
+      document.getElementById('pagination').innerHTML = '';
+      return;
+    }
+    if (filteredIdx.length === 0) {
+      wrap.innerHTML = `<div class="empty-state">
+        <strong>검색 결과가 없습니다</strong>
+        다른 검색어나 필터를 시도해 보세요.
+      </div>`;
+      document.getElementById('pagination').innerHTML = '';
+      return;
+    }
+
+    const start = (currentPage - 1) * PER_PAGE;
+    const end = Math.min(start + PER_PAGE, filteredIdx.length);
+    const pageItems = filteredIdx.slice(start, end);
+
+    wrap.className = 'q-list';
+    wrap.innerHTML = pageItems.map(realIdx => {
+      const q = questions[realIdx];
+      const isSubj = q.type === 'subjective';
+      const text = (q.q || '').trim() || '(질문 없음)';
+      const hasText = !!(q.q || '').trim();
+      return `
+        <div class="q-card ${isSubj ? 'subjective' : ''}" onclick="openEditor(${realIdx})">
+          <div class="q-card-num">${String(realIdx + 1).padStart(3, '0')}</div>
+          <div class="q-card-body">
+            <div class="q-card-text ${hasText ? '' : 'empty'}">${escHtml(text)}</div>
+            <div class="q-card-meta">
+              <span class="q-tag ${isSubj ? 'subj' : 'obj'}">${isSubj ? '주관식' : '객관식'}</span>
+              ${q.img ? '<span class="q-tag img">📷 이미지</span>' : ''}
+              ${!isSubj ? `<span>정답 ${['①','②','③','④'][q.answer || 0]}</span>` : '<span>자가채점</span>'}
+            </div>
+          </div>
+          <div class="q-card-actions" onclick="event.stopPropagation()">
+            <button class="icon-btn" onclick="moveQuestion(${realIdx}, -1)" title="위로">↑</button>
+            <button class="icon-btn" onclick="moveQuestion(${realIdx}, 1)" title="아래로">↓</button>
+            <button class="icon-btn danger" onclick="deleteQuestion(${realIdx})" title="삭제">✕</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    renderPagination(totalPages);
+  }
+
+  function renderPagination(totalPages) {
+    const wrap = document.getElementById('pagination');
+    if (totalPages <= 1) { wrap.innerHTML = ''; return; }
+    let html = `<button class="page-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="goToPage(${currentPage - 1})">‹</button>`;
+    // 페이지 번호 표시 (최대 7개)
+    let pages = [];
+    if (totalPages <= 7) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+      pages.push(1);
+      if (currentPage > 4) pages.push('...');
+      const s = Math.max(2, currentPage - 1);
+      const e = Math.min(totalPages - 1, currentPage + 1);
+      for (let i = s; i <= e; i++) pages.push(i);
+      if (currentPage < totalPages - 3) pages.push('...');
+      pages.push(totalPages);
+    }
+    pages.forEach(p => {
+      if (p === '...') html += `<span style="color: var(--muted); padding: 0 4px;">…</span>`;
+      else html += `<button class="page-btn ${p === currentPage ? 'active' : ''}" onclick="goToPage(${p})">${p}</button>`;
+    });
+    html += `<button class="page-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="goToPage(${currentPage + 1})">›</button>`;
+    html += `<input type="number" class="page-jump" id="pageJump" min="1" max="${totalPages}" placeholder="이동" onkeydown="if(event.key==='Enter')jumpToPage()">`;
+    wrap.innerHTML = html;
+  }
+
+  function goToPage(p) { currentPage = p; renderList(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  function jumpToPage() {
+    const v = parseInt(document.getElementById('pageJump').value);
+    if (v && v > 0) goToPage(v);
+  }
+
+  function onSearch() { currentPage = 1; renderList(); }
+  function onFilter() { currentPage = 1; renderList(); }
+
+  // ============ MOVE/DELETE ============
+  function moveQuestion(idx, dir) {
+    const newIdx = idx + dir;
+    if (newIdx < 0 || newIdx >= questions.length) return;
+    [questions[idx], questions[newIdx]] = [questions[newIdx], questions[idx]];
+    updateStats();
+    renderList();
+  }
+
+  function deleteQuestion(idx) {
+    if (!confirm(`문항 ${idx + 1}을(를) 삭제하시겠습니까?`)) return;
+    questions.splice(idx, 1);
+    updateStats();
+    renderList();
+    toast('삭제되었습니다');
+  }
+
+  // ============ EDITOR ============
+  function openEditor(idx) {
+    if (typeof idx === 'number') {
+      editorState = { mode: 'edit', index: idx, data: JSON.parse(JSON.stringify(questions[idx])) };
+      document.getElementById('editorTitle').textContent = `문항 ${idx + 1} 편집`;
+    } else {
+      editorState = {
+        mode: 'add',
+        index: -1,
+        data: { type: 'objective', q: '', img: '', choices: ['', '', '', ''], answer: 0 }
+      };
+      document.getElementById('editorTitle').textContent = '문제 추가';
+    }
+    renderEditor();
+    document.getElementById('editorOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeEditor() {
+    document.getElementById('editorOverlay').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  function setEditorType(type) {
+    if (editorState.data.type === type) return;
+    const savedImg = editorState.data.img || '';
+    const savedQ = document.getElementById('editQ').value;
+    if (type === 'subjective') {
+      editorState.data = { type: 'subjective', q: savedQ, img: savedImg, answer: '', explain: '' };
+    } else {
+      editorState.data = { type: 'objective', q: savedQ, img: savedImg, choices: ['', '', '', ''], answer: 0 };
+    }
+    renderEditor();
+  }
+
+  function renderEditor() {
+    const d = editorState.data;
+    const isSubj = d.type === 'subjective';
+    document.getElementById('typeObjBtn').classList.toggle('active', !isSubj);
+    document.getElementById('typeSubjBtn').classList.toggle('active', isSubj);
+    document.getElementById('editQ').value = d.q || '';
+    document.getElementById('objectiveSection').style.display = isSubj ? 'none' : 'block';
+    document.getElementById('subjectiveSection').style.display = isSubj ? 'block' : 'none';
+
+    // 이미지
+    const imgArea = document.getElementById('imageArea');
+    if (d.img) {
+      const kb = Math.round(d.img.length / 1024);
+      imgArea.innerHTML = `
+        <div class="image-preview">
+          <img src="${d.img}" alt="">
+          <div class="image-info">
+            <span>● 첨부됨 · ${kb}KB</span>
+            <button class="image-remove" onclick="removeEditorImage()">삭제</button>
+          </div>
+        </div>`;
+    } else {
+      imgArea.innerHTML = `
+        <div class="image-drop" id="imgDrop" onclick="document.getElementById('imgPick').click()">
+          <svg class="image-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="5" width="18" height="14" rx="1"/>
+            <circle cx="8.5" cy="10" r="1.5" fill="currentColor"/>
+            <path d="M3 17 L 9 12 L 14 15 L 21 9" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <strong>이미지 추가하기</strong>
+          <span class="sub">클릭하거나 파일을 드래그</span>
+          <input type="file" id="imgPick" accept="image/*" onchange="handleEditorImage(this.files[0])">
+        </div>`;
+      setTimeout(() => {
+        const drop = document.getElementById('imgDrop');
+        if (!drop) return;
+        drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('dragover'); });
+        drop.addEventListener('dragleave', () => drop.classList.remove('dragover'));
+        drop.addEventListener('drop', e => {
+          e.preventDefault(); drop.classList.remove('dragover');
+          if (e.dataTransfer.files[0]) handleEditorImage(e.dataTransfer.files[0]);
+        });
+      }, 50);
+    }
+
+    // 객관식 보기
+    if (!isSubj) {
+      document.getElementById('editChoices').innerHTML = d.choices.map((c, j) => `
+        <div class="choice-row">
+          <div class="choice-radio ${d.answer === j ? 'selected' : ''}" onclick="setEditorAnswer(${j})">
+            ${d.answer === j ? '✓' : ['①','②','③','④'][j]}
+          </div>
+          <input class="choice-input" placeholder="보기 ${['①','②','③','④'][j]}" value="${escHtml(c)}" oninput="editorState.data.choices[${j}] = this.value">
+        </div>
+      `).join('');
+    } else {
+      document.getElementById('editSubjAnswer').value = d.answer || '';
+      document.getElementById('editExplain').value = d.explain || '';
+    }
+  }
+
+  function setEditorAnswer(j) {
+    editorState.data.answer = j;
+    renderEditor();
+  }
+
+  function removeEditorImage() {
+    editorState.data.img = '';
+    renderEditor();
+  }
+
+  function handleEditorImage(file) {
+    if (!file || !file.type.startsWith('image/')) { toast('이미지 파일이 아닙니다', true); return; }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        let w = img.width, h = img.height;
+        if (w > IMG_MAX || h > IMG_MAX) {
+          if (w > h) { h = Math.round(h * IMG_MAX / w); w = IMG_MAX; }
+          else { w = Math.round(w * IMG_MAX / h); h = IMG_MAX; }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#faf6ec';
+        ctx.fillRect(0, 0, w, h);
+        ctx.drawImage(img, 0, 0, w, h);
+        editorState.data.img = canvas.toDataURL('image/jpeg', IMG_QUALITY);
+        renderEditor();
+        toast(`이미지 첨부됨 · ${Math.round(editorState.data.img.length / 1024)}KB`);
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function saveEditor() {
+    // 입력값 수집
+    editorState.data.q = document.getElementById('editQ').value.trim();
+    if (editorState.data.type === 'subjective') {
+      editorState.data.answer = document.getElementById('editSubjAnswer').value.trim();
+      editorState.data.explain = document.getElementById('editExplain').value.trim();
+    }
+
+    // 검증
+    const d = editorState.data;
+    if (!d.q) { toast('질문을 입력하세요', true); return; }
+    if (d.type === 'objective') {
+      const valid = d.choices.filter(c => c.trim()).length;
+      if (valid < 2) { toast('보기를 2개 이상 입력하세요', true); return; }
+      if (!d.choices[d.answer] || !d.choices[d.answer].trim()) {
+        toast('정답으로 지정된 보기가 비어있습니다', true); return;
+      }
+    } else {
+      if (!d.answer) { toast('모범 답안을 입력하세요', true); return; }
+    }
+
+    // 저장
+    if (editorState.mode === 'edit') {
+      questions[editorState.index] = d;
+      toast('수정되었습니다');
+    } else {
+      questions.push(d);
+      toast(`추가되었습니다 (총 ${questions.length}문제)`);
+    }
+    closeEditor();
+    updateStats();
+    renderList();
+  }
+
+  // ============ JSON SAVE/LOAD ============
+  function saveJSON() {
+    if (questions.length === 0) { toast('저장할 문제가 없습니다', true); return; }
+    const data = {
+      version: 1,
+      title: '숲해설가 이론 Quiz',
+      updated: new Date().toISOString(),
+      questions: questions
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'questions.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast(`${questions.length}문제 저장됨 · questions.json`);
+  }
+
+  function loadJSON(file) {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = JSON.parse(e.target.result);
+        const loaded = Array.isArray(data) ? data : data.questions;
+        if (!Array.isArray(loaded)) throw new Error('형식 오류');
+        // 정규화
+        loaded.forEach(q => {
+          if (!q.type) q.type = 'objective';
+          if (!q.img) q.img = '';
+          if (q.type === 'objective' && !Array.isArray(q.choices)) q.choices = ['', '', '', ''];
+        });
+        if (questions.length > 0) {
+          if (!confirm(`현재 ${questions.length}개 문제가 있습니다. 불러온 ${loaded.length}개로 교체하시겠습니까? (기존 데이터는 사라집니다)`)) {
+            document.getElementById('fileInput').value = '';
+            return;
+          }
+        }
+        questions = loaded;
+        currentPage = 1;
+        document.getElementById('searchInput').value = '';
+        document.getElementById('filterSelect').value = 'all';
+        updateStats();
+        renderList();
+        toast(`${loaded.length}문제 불러옴`);
+      } catch (err) {
+        toast('파일을 읽을 수 없습니다 (JSON 형식 확인)', true);
+      }
+      document.getElementById('fileInput').value = '';
+    };
+    reader.readAsText(file);
+  }
+
+  // ============ SHARE INFO ============
+  function showShareInfo() {
+    const info = document.getElementById('shareInfo');
+    const url = document.getElementById('solveUrl');
+    const base = window.location.href.replace(/[^/]*$/, '');
+    url.textContent = base + 'solve.html';
+    info.style.display = info.style.display === 'none' ? 'block' : 'none';
+  }
+
+  // ============ INIT ============
+  updateStats();
+  renderList();
+</script>
+</body>
+</html>

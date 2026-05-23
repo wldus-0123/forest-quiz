@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>숲해설가 이론 Quiz — 풀이</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Serif+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f3efe4; --paper: #faf6ec; --ink: #1f2a1d;
+    --moss: #4a6741; --moss-dark: #2d4029; --bark: #6b4f3a;
+    --leaf: #7a9b6e; --rust: #b85c38;
+    --muted: #8a8675; --line: #c5beaa;
+    --shadow: 5px 5px 0 var(--moss-dark);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Noto Serif KR', serif; background: var(--bg); color: var(--ink); min-height: 100vh; padding: 24px 16px 60px; line-height: 1.5;
+    background-image:
+      radial-gradient(circle at 15% 5%, rgba(74,103,65,0.10) 0%, transparent 35%),
+      radial-gradient(circle at 90% 90%, rgba(107,79,58,0.08) 0%, transparent 35%);
+  }
+  .container { max-width: 720px; margin: 0 auto; }
+  .header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 28px; padding-bottom: 18px; border-bottom: 1.5px solid var(--moss); position: relative; }
+  .header::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 60px; height: 1.5px; background: var(--moss); }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand-mark { width: 32px; height: 32px; color: var(--moss); }
+  .brand-text { font-family: 'Gowun Batang', serif; font-weight: 700; font-size: 18px; color: var(--moss-dark); }
+  .brand-text .em { color: var(--rust); font-style: italic; }
+  .meta { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.18em; }
+  .screen { display: none; animation: fadeIn 0.4s ease; }
+  .screen.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  .intro { padding: 32px 0 20px; }
+  .intro-tag { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; color: var(--moss); margin-bottom: 18px; }
+  .intro h1 { font-family: 'Gowun Batang', serif; font-size: clamp(32px, 7vw, 48px); font-weight: 700; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 16px; color: var(--moss-dark); }
+  .intro .desc { font-size: 16px; line-height: 1.7; color: var(--muted); margin-bottom: 28px; }
+  .quiz-info { background: var(--paper); border: 1.5px solid var(--moss-dark); box-shadow: var(--shadow); padding: 24px; margin-bottom: 28px; }
+  .quiz-info-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px dashed var(--line); font-size: 14px; }
+  .quiz-info-row:last-child { border-bottom: none; }
+  .quiz-info-row .key { color: var(--muted); font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; }
+  .quiz-info-row .val { font-weight: 600; color: var(--moss-dark); }
+  .quiz-info-row .val.accent { color: var(--rust); font-family: 'Gowun Batang', serif; font-size: 18px; }
+  .btn { font-family: 'Noto Serif KR', serif; font-size: 14px; font-weight: 600; padding: 14px 24px; border: 1.5px solid var(--moss-dark); background: var(--paper); color: var(--moss-dark); cursor: pointer; box-shadow: var(--shadow); transition: all 0.15s ease; display: inline-block; text-align: center; letter-spacing: 0.02em; }
+  .btn:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 var(--moss-dark); }
+  .btn:active { transform: translate(1px, 1px); box-shadow: 3px 3px 0 var(--moss-dark); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: var(--shadow); }
+  .btn-primary { background: var(--moss); color: var(--paper); }
+  .btn-rust { background: var(--rust); color: var(--paper); border-color: var(--rust); }
+  .btn-row { display: flex; gap: 14px; flex-wrap: wrap; }
+  .play-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--moss); }
+  .progress-bar { width: 100%; height: 3px; background: rgba(74,103,65,0.15); margin-bottom: 28px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--leaf), var(--moss)); transition: width 0.4s ease; }
+  .q-type-tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; padding: 3px 9px; border: 1px solid var(--moss); color: var(--moss); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 14px; }
+  .q-type-tag.subj { color: var(--rust); border-color: var(--rust); }
+  .play-question { font-family: 'Gowun Batang', serif; font-size: clamp(20px, 4vw, 26px); font-weight: 700; line-height: 1.5; margin-bottom: 22px; color: var(--moss-dark); padding-left: 16px; border-left: 3px solid var(--moss); white-space: pre-wrap; word-break: keep-all; }
+  .play-image { margin-bottom: 24px; border: 1.5px solid var(--moss-dark); background: var(--paper); overflow: hidden; box-shadow: 4px 4px 0 var(--moss-dark); }
+  .play-image img { display: block; width: 100%; height: auto; max-height: 420px; object-fit: contain; background: #f0ebde; cursor: zoom-in; }
+  .play-choices { display: grid; gap: 10px; margin-bottom: 24px; }
+  .play-choice { text-align: left; font-family: 'Noto Serif KR', serif; font-size: 16px; padding: 16px 18px; background: var(--paper); border: 1.5px solid var(--moss-dark); cursor: pointer; transition: all 0.15s; display: flex; align-items: flex-start; gap: 14px; box-shadow: 3px 3px 0 var(--moss-dark); line-height: 1.5; color: var(--ink); word-break: keep-all; }
+  .play-choice:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--moss-dark); }
+  .play-choice.selected { background: var(--moss); color: var(--paper); }
+  .play-choice.selected .number { color: var(--paper); }
+  .play-choice .number { font-family: 'Gowun Batang', serif; font-weight: 700; font-size: 18px; flex-shrink: 0; color: var(--moss); line-height: 1.5; }
+
+  .subj-input { width: 100%; font-family: 'Noto Serif KR', serif; font-size: 16px; padding: 14px 16px; border: 1.5px solid var(--moss-dark); background: var(--paper); color: var(--ink); outline: none; line-height: 1.6; min-height: 110px; resize: vertical; box-shadow: 3px 3px 0 var(--moss-dark); margin-bottom: 14px; }
+  .subj-input:focus { border-color: var(--rust); box-shadow: 4px 4px 0 var(--rust); }
+
+  .answer-reveal { background: rgba(74,103,65,0.10); border: 1.5px solid var(--moss); border-left: 4px solid var(--moss); padding: 18px 20px; margin-bottom: 16px; animation: revealIn 0.35s ease; }
+  @keyframes revealIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+  .answer-reveal .label-row { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; color: var(--moss); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 8px; }
+  .answer-reveal .answer-text { font-family: 'Gowun Batang', serif; font-size: 17px; font-weight: 700; color: var(--moss-dark); line-height: 1.6; white-space: pre-wrap; word-break: keep-all; }
+  .answer-reveal .explain { margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--moss); font-size: 14px; color: var(--moss-dark); line-height: 1.7; white-space: pre-wrap; word-break: keep-all; }
+  .answer-reveal .explain::before { content: '해설'; display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; color: var(--bark); text-transform: uppercase; letter-spacing: 0.15em; margin-right: 8px; padding: 2px 7px; border: 1px solid var(--bark); }
+
+  .self-judge { background: rgba(184,92,56,0.06); border: 1px dashed var(--rust); padding: 14px 18px; margin-bottom: 16px; text-align: center; }
+  .self-judge p { font-size: 13px; color: var(--moss-dark); margin-bottom: 10px; }
+  .judge-buttons { display: flex; gap: 10px; justify-content: center; }
+  .judge-btn { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; padding: 8px 16px; border: 1.5px solid var(--moss-dark); background: var(--paper); color: var(--moss-dark); cursor: pointer; text-transform: uppercase; letter-spacing: 0.12em; transition: all 0.15s; }
+  .judge-btn:hover { transform: translateY(-1px); }
+  .judge-btn.correct { color: var(--moss); border-color: var(--moss); }
+  .judge-btn.correct.active { background: var(--moss); color: var(--paper); }
+  .judge-btn.wrong { color: var(--rust); border-color: var(--rust); }
+  .judge-btn.wrong.active { background: var(--rust); color: var(--paper); }
+
+  .result-score { text-align: center; padding: 36px 0 16px; }
+  .result-score .number { font-family: 'Gowun Batang', serif; font-weight: 700; font-size: clamp(80px, 20vw, 140px); line-height: 1; color: var(--rust); letter-spacing: -0.04em; }
+  .result-score .total { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.2em; margin-top: 12px; }
+  .result-message { text-align: center; font-family: 'Gowun Batang', serif; font-size: 22px; margin-bottom: 12px; color: var(--moss-dark); }
+  .result-percent { text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--muted); letter-spacing: 0.1em; margin-bottom: 24px; }
+  .result-breakdown { display: flex; justify-content: center; gap: 24px; margin-bottom: 32px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; flex-wrap: wrap; }
+  .result-breakdown span strong { color: var(--moss-dark); font-size: 14px; }
+
+  .review-card { background: var(--paper); border: 1.5px solid var(--moss-dark); padding: 20px; margin-bottom: 14px; box-shadow: 3px 3px 0 var(--moss-dark); }
+  .review-card.correct { border-left: 5px solid var(--moss); }
+  .review-card.wrong { border-left: 5px solid var(--rust); }
+  .review-card.subj { border-left: 5px solid var(--bark); }
+  .review-tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; padding: 3px 8px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; }
+  .review-tag.correct { background: var(--moss); color: var(--paper); }
+  .review-tag.wrong { background: var(--rust); color: var(--paper); }
+  .review-tag.subj { background: var(--bark); color: var(--paper); }
+  .review-q { font-family: 'Gowun Batang', serif; font-size: 17px; font-weight: 700; line-height: 1.5; margin-bottom: 12px; color: var(--moss-dark); white-space: pre-wrap; word-break: keep-all; }
+  .review-image { margin-bottom: 14px; border: 1px solid var(--line); background: #f0ebde; overflow: hidden; }
+  .review-image img { display: block; width: 100%; height: auto; max-height: 280px; object-fit: contain; }
+  .review-choice { padding: 9px 14px; margin-bottom: 5px; font-size: 14px; border-left: 3px solid transparent; line-height: 1.5; word-break: keep-all; }
+  .review-choice.answer { background: rgba(74,103,65,0.10); border-left-color: var(--moss); font-weight: 600; }
+  .review-choice.user-wrong { background: rgba(184,92,56,0.10); border-left-color: var(--rust); text-decoration: line-through; color: var(--muted); }
+  .review-mark { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); margin-left: 8px; letter-spacing: 0.1em; }
+  .review-subj-block { margin-top: 8px; }
+  .review-subj-block .small-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); margin-bottom: 4px; display: block; }
+  .review-subj-block .my-answer { background: rgba(107,79,58,0.06); border-left: 3px solid var(--bark); padding: 9px 14px; font-size: 14px; line-height: 1.6; margin-bottom: 10px; white-space: pre-wrap; word-break: keep-all; }
+  .review-subj-block .ref-answer { background: rgba(74,103,65,0.10); border-left: 3px solid var(--moss); padding: 9px 14px; font-size: 14px; line-height: 1.6; font-weight: 600; color: var(--moss-dark); white-space: pre-wrap; word-break: keep-all; }
+
+  .empty { text-align: center; padding: 60px 20px; }
+  .empty-icon { width: 56px; height: 56px; color: var(--leaf); margin: 0 auto 20px; opacity: 0.5; }
+  .empty h2 { font-family: 'Gowun Batang', serif; font-size: 24px; color: var(--moss-dark); margin-bottom: 12px; }
+  .empty p { color: var(--muted); font-size: 15px; line-height: 1.7; max-width: 380px; margin: 0 auto; }
+  .empty code { font-family: 'JetBrains Mono', monospace; background: rgba(0,0,0,0.05); padding: 2px 6px; font-size: 13px; }
+
+  .loading { text-align: center; padding: 60px 20px; color: var(--muted); }
+  .loading-spinner { display: inline-block; width: 28px; height: 28px; border: 3px solid var(--line); border-top-color: var(--moss); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 16px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  h2.section-title { font-family: 'Gowun Batang', serif; font-size: 28px; font-weight: 700; letter-spacing: -0.02em; color: var(--moss-dark); margin-bottom: 20px; }
+
+  .img-modal { position: fixed; inset: 0; background: rgba(31,42,29,0.92); display: none; align-items: center; justify-content: center; padding: 24px; z-index: 200; cursor: zoom-out; }
+  .img-modal.active { display: flex; }
+  .img-modal img { max-width: 100%; max-height: 100%; object-fit: contain; border: 2px solid var(--paper); }
+</style>
+</head>
+<body>
+<div class="container">
+  <header class="header">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M16 28 L16 18" stroke-linecap="round"/>
+        <path d="M16 18 C 10 18, 7 14, 8 8 C 13 9, 16 12, 16 18" fill="currentColor" fill-opacity="0.15"/>
+        <path d="M16 18 C 22 18, 25 14, 24 8 C 19 9, 16 12, 16 18" fill="currentColor" fill-opacity="0.15"/>
+        <path d="M16 20 C 12 20, 10 17, 11 13 C 14 14, 16 16, 16 20" fill="currentColor" fill-opacity="0.25"/>
+        <path d="M16 20 C 20 20, 22 17, 21 13 C 18 14, 16 16, 16 20" fill="currentColor" fill-opacity="0.25"/>
+      </svg>
+      <span class="brand-text">숲해설가 이론 <span class="em">Quiz</span></span>
+    </div>
+    <div class="meta" id="modeLabel">풀이실</div>
+  </header>
+
+  <section class="screen active" id="screen-loading">
+    <div class="loading">
+      <div class="loading-spinner"></div>
+      <div>문제를 불러오는 중...</div>
+    </div>
+  </section>
+
+  <section class="screen" id="screen-error">
+    <div class="empty">
+      <svg class="empty-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.2">
+        <path d="M16 28 L16 14" stroke-linecap="round"/>
+        <path d="M16 14 C 9 14, 5 10, 6 4 C 12 5, 16 8, 16 14" fill="currentColor" fill-opacity="0.2"/>
+        <path d="M16 14 C 23 14, 27 10, 26 4 C 20 5, 16 8, 16 14" fill="currentColor" fill-opacity="0.2"/>
+      </svg>
+      <h2>문제를 불러올 수 없습니다</h2>
+      <p id="errorMessage"></p>
+      <button class="btn btn-primary" onclick="location.reload()" style="margin-top: 24px;">다시 시도</button>
+    </div>
+  </section>
+
+  <section class="screen" id="screen-intro">
+    <div class="intro">
+      <div class="intro-tag">— 숲해설가 이론 학습</div>
+      <h1>오늘의 <span style="color: var(--rust);">스무 문항</span></h1>
+      <p class="desc">전체 문제 풀에서 무작위로 추출한 문항입니다. 한 번 풀이를 마치고 다시 시작하면 새로운 세트가 출제됩니다.</p>
+    </div>
+    <div class="quiz-info">
+      <div class="quiz-info-row"><span class="key">출제 문항</span><span class="val accent" id="introCount">20</span></div>
+      <div class="quiz-info-row"><span class="key">전체 풀</span><span class="val" id="introPool"></span></div>
+      <div class="quiz-info-row"><span class="key">구성</span><span class="val" id="introMix"></span></div>
+      <div class="quiz-info-row"><span class="key">제한 시간</span><span class="val">없음</span></div>
+    </div>
+    <button class="btn btn-primary" onclick="startPlay()" style="width: 100%;">풀이 시작하기 →</button>
+  </section>
+
+  <section class="screen" id="screen-play">
+    <div class="play-header">
+      <span>오늘의 20문항</span>
+      <span id="playProgress">0 / 0</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div id="qTypeTag"></div>
+    <div class="play-question" id="playQuestion"></div>
+    <div id="playImage"></div>
+    <div id="playBody"></div>
+    <div class="btn-row" id="playFooter"></div>
+  </section>
+
+  <section class="screen" id="screen-result">
+    <div class="result-score">
+      <div class="number" id="resultScore">0</div>
+      <div class="total" id="resultTotal">/ 0 문항</div>
+    </div>
+    <div class="result-message" id="resultMessage"></div>
+    <div class="result-percent" id="resultPercent"></div>
+    <div class="result-breakdown" id="resultBreakdown"></div>
+    <div class="btn-row" style="justify-content: center;">
+      <button class="btn" onclick="reviewQuiz()">답안 검토</button>
+      <button class="btn btn-primary" onclick="restartPlay()">새로운 20문항</button>
+    </div>
+  </section>
+
+  <section class="screen" id="screen-review">
+    <h2 class="section-title">답안 검토</h2>
+    <div id="reviewList"></div>
+    <div class="btn-row" style="margin-top: 28px;">
+      <button class="btn btn-primary" onclick="goto('result')">← 결과 화면으로</button>
+    </div>
+  </section>
+</div>
+
+<div class="img-modal" id="imgModal" onclick="closeImageModal()">
+  <img id="imgModalImg" src="" alt="">
+</div>
+
+<script>
+  let allQuestions = [];
+  let quizSet = [];
+  let playState = { current: 0, answers: [], revealed: [], selfJudge: [] };
+  const QUIZ_SIZE = 20;
+  const JSON_PATH = 'questions.json';
+
+  function goto(screen) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-' + screen).classList.add('active');
+    const labels = { loading: '불러오는 중', error: '안내', intro: '시작', play: '풀이', result: '결과', review: '검토' };
+    document.getElementById('modeLabel').textContent = labels[screen] || '풀이실';
+    window.scrollTo(0, 0);
+  }
+
+  function escHtml(str) {
+    return (str || '').replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+  }
+
+  function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function pickRandom(arr, n) {
+    return shuffle(arr).slice(0, Math.min(n, arr.length));
+  }
+
+  async function loadQuestions() {
+    try {
+      const resp = await fetch(JSON_PATH + '?t=' + Date.now());
+      if (!resp.ok) throw new Error('not_found');
+      const data = await resp.json();
+      const arr = Array.isArray(data) ? data : data.questions;
+      if (!Array.isArray(arr) || arr.length === 0) throw new Error('empty');
+      arr.forEach(q => {
+        if (!q.type) q.type = 'objective';
+        if (!q.img) q.img = '';
+      });
+      allQuestions = arr;
+      showIntro();
+    } catch (err) {
+      let msg = '';
+      if (err.message === 'not_found') {
+        msg = '<code>questions.json</code> 파일을 찾을 수 없습니다.<br>출제자가 같은 폴더에 문제 파일을 올렸는지 확인해 주세요.';
+      } else if (err.message === 'empty') {
+        msg = '아직 등록된 문제가 없습니다.';
+      } else {
+        msg = '문제 파일을 읽는 중 오류가 발생했습니다.';
+      }
+      document.getElementById('errorMessage').innerHTML = msg;
+      goto('error');
+    }
+  }
+
+  function showIntro() {
+    const objCount = allQuestions.filter(q => q.type !== 'subjective').length;
+    const subjCount = allQuestions.filter(q => q.type === 'subjective').length;
+    document.getElementById('introPool').textContent = `${allQuestions.length}문제`;
+    document.getElementById('introMix').textContent = `객관식 ${objCount} · 주관식 ${subjCount}`;
+    document.getElementById('introCount').textContent = Math.min(QUIZ_SIZE, allQuestions.length) + '문항';
+    goto('intro');
+  }
+
+  function startPlay() {
+    quizSet = pickRandom(allQuestions, QUIZ_SIZE);
+    playState = {
+      current: 0,
+      answers: new Array(quizSet.length).fill(null),
+      revealed: new Array(quizSet.length).fill(false),
+      selfJudge: new Array(quizSet.length).fill(null)
+    };
+    renderPlayQuestion();
+    goto('play');
+  }
+
+  function restartPlay() { startPlay(); }
+
+  function renderPlayQuestion() {
+    const i = playState.current;
+    const q = quizSet[i];
+    const total = quizSet.length;
+    document.getElementById('playProgress').textContent = `${i + 1} / ${total}`;
+    document.getElementById('progressFill').style.width = (i / total * 100) + '%';
+    const isSubj = q.type === 'subjective';
+    document.getElementById('qTypeTag').innerHTML =
+      `<span class="q-type-tag ${isSubj ? 'subj' : ''}">${isSubj ? '주관식' : '객관식'}</span>`;
+    document.getElementById('playQuestion').textContent = q.q;
+    document.getElementById('playImage').innerHTML = q.img
+      ? `<div class="play-image"><img src="${q.img}" alt="문항 이미지" onclick="openImageModal(this.src)"></div>`
+      : '';
+    if (isSubj) renderSubjectiveBody(i, q);
+    else renderObjectiveBody(i, q);
+  }
+
+  function renderObjectiveBody(i, q) {
+    const numerals = ['①','②','③','④'];
+    const selected = playState.answers[i];
+    document.getElementById('playBody').innerHTML = `
+      <div class="play-choices">
+        ${q.choices.map((c, j) => {
+          if (!c.trim()) return '';
+          return `<button class="play-choice ${selected === j ? 'selected' : ''}" onclick="selectChoice(${j})">
+              <span class="number">${numerals[j]}</span><span>${escHtml(c)}</span>
+            </button>`;
+        }).join('')}
+      </div>`;
+    renderPlayFooter();
+  }
+
+  function renderSubjectiveBody(i, q) {
+    const myAnswer = playState.answers[i] || '';
+    const revealed = playState.revealed[i];
+    const judge = playState.selfJudge[i];
+    let html = `<textarea class="subj-input" placeholder="답을 자유롭게 작성해 주세요" oninput="updateSubjInput(${i}, this.value)" ${revealed ? 'readonly' : ''}>${escHtml(myAnswer)}</textarea>`;
+    if (!revealed) {
+      html += `<button class="btn btn-rust" onclick="revealAnswer(${i})" style="width: 100%; margin-bottom: 8px;">정답 확인하기</button>`;
+    } else {
+      html += `<div class="answer-reveal">
+          <div class="label-row">◆ 모범 답안</div>
+          <div class="answer-text">${escHtml(q.answer)}</div>
+          ${q.explain ? `<div class="explain">${escHtml(q.explain)}</div>` : ''}
+        </div>
+        <div class="self-judge">
+          <p>내 답이 맞았는지 직접 채점해 주세요</p>
+          <div class="judge-buttons">
+            <button class="judge-btn correct ${judge === 'correct' ? 'active' : ''}" onclick="setSelfJudge(${i}, 'correct')">✓ 맞았어요</button>
+            <button class="judge-btn wrong ${judge === 'wrong' ? 'active' : ''}" onclick="setSelfJudge(${i}, 'wrong')">✗ 틀렸어요</button>
+          </div>
+        </div>`;
+    }
+    document.getElementById('playBody').innerHTML = html;
+    renderPlayFooter();
+  }
+
+  function renderPlayFooter() {
+    const i = playState.current;
+    const q = quizSet[i];
+    const total = quizSet.length;
+    const isLast = i === total - 1;
+    const isFirst = i === 0;
+    let canProceed = false;
+    if (q.type === 'subjective') {
+      canProceed = playState.revealed[i] && playState.selfJudge[i] !== null;
+    } else {
+      canProceed = playState.answers[i] !== null;
+    }
+    const nextLabel = isLast ? '결과 보기 →' : '다음 →';
+    const prevBtn = !isFirst ? `<button class="btn" onclick="prevQuestion()">← 이전</button>` : '';
+    document.getElementById('playFooter').innerHTML = `${prevBtn}<button class="btn btn-rust" onclick="nextQuestion()" ${canProceed ? '' : 'disabled'} style="flex: 1;">${nextLabel}</button>`;
+  }
+
+  function selectChoice(idx) { playState.answers[playState.current] = idx; renderPlayQuestion(); }
+  function updateSubjInput(i, val) { playState.answers[i] = val; renderPlayFooter(); }
+  function revealAnswer(i) { playState.revealed[i] = true; renderPlayQuestion(); }
+  function setSelfJudge(i, j) { playState.selfJudge[i] = j; renderPlayQuestion(); }
+  function prevQuestion() { if (playState.current > 0) { playState.current--; renderPlayQuestion(); } }
+  function nextQuestion() {
+    const i = playState.current;
+    const q = quizSet[i];
+    if (q.type === 'subjective') {
+      if (!playState.revealed[i] || playState.selfJudge[i] === null) return;
+    } else {
+      if (playState.answers[i] === null) return;
+    }
+    if (i === quizSet.length - 1) showResult();
+    else { playState.current++; renderPlayQuestion(); }
+  }
+
+  function showResult() {
+    let objCorrect = 0, objTotal = 0, subjCorrect = 0, subjTotal = 0;
+    quizSet.forEach((q, i) => {
+      if (q.type === 'subjective') {
+        subjTotal++;
+        if (playState.selfJudge[i] === 'correct') subjCorrect++;
+      } else {
+        objTotal++;
+        if (playState.answers[i] === q.answer) objCorrect++;
+      }
+    });
+    const totalCorrect = objCorrect + subjCorrect;
+    const totalCount = objTotal + subjTotal;
+    const pct = totalCount > 0 ? totalCorrect / totalCount : 0;
+    document.getElementById('resultScore').textContent = totalCorrect;
+    document.getElementById('resultTotal').textContent = `/ ${totalCount} 문항`;
+    document.getElementById('resultPercent').textContent = `정답률 · ${Math.round(pct * 100)}%`;
+    let msg = '';
+    if (pct === 1) msg = '숲을 꿰뚫는 눈을 가지셨군요';
+    else if (pct >= 0.8) msg = '깊은 숲에 가까워졌습니다';
+    else if (pct >= 0.6) msg = '한 걸음씩 잘 나아가고 있어요';
+    else if (pct >= 0.4) msg = '다시 한 번 천천히';
+    else msg = '숲의 길은 길고 깊습니다';
+    document.getElementById('resultMessage').textContent = msg;
+    const breakdown = [];
+    if (objTotal > 0) breakdown.push(`객관식 <strong>${objCorrect}/${objTotal}</strong>`);
+    if (subjTotal > 0) breakdown.push(`주관식 <strong>${subjCorrect}/${subjTotal}</strong>`);
+    document.getElementById('resultBreakdown').innerHTML = breakdown.map(b => `<span>${b}</span>`).join('');
+    goto('result');
+  }
+
+  function reviewQuiz() {
+    const numerals = ['①','②','③','④'];
+    const wrap = document.getElementById('reviewList');
+    wrap.innerHTML = quizSet.map((q, i) => {
+      const isSubj = q.type === 'subjective';
+      const imgHtml = q.img ? `<div class="review-image"><img src="${q.img}" alt="" onclick="openImageModal(this.src)" style="cursor: zoom-in;"></div>` : '';
+      if (isSubj) {
+        const myAns = playState.answers[i] || '(답하지 않음)';
+        const judge = playState.selfJudge[i];
+        const tagClass = judge === 'correct' ? 'correct' : judge === 'wrong' ? 'wrong' : 'subj';
+        const tagText = judge === 'correct' ? '정답' : judge === 'wrong' ? '오답' : '미채점';
+        const cardClass = judge === 'correct' ? 'correct' : judge === 'wrong' ? 'wrong' : 'subj';
+        return `<div class="review-card ${cardClass}">
+            <span class="review-tag ${tagClass}">문항 ${i+1} · 주관식 · ${tagText}</span>
+            <div class="review-q">${escHtml(q.q)}</div>
+            ${imgHtml}
+            <div class="review-subj-block">
+              <span class="small-label">내가 작성한 답</span>
+              <div class="my-answer">${escHtml(myAns)}</div>
+              <span class="small-label">모범 답안</span>
+              <div class="ref-answer">${escHtml(q.answer)}</div>
+              ${q.explain ? `<span class="small-label" style="margin-top:10px;">해설</span><div class="my-answer">${escHtml(q.explain)}</div>` : ''}
+            </div>
+          </div>`;
+      }
+      const myAns = playState.answers[i];
+      const isCorrect = myAns === q.answer;
+      return `<div class="review-card ${isCorrect ? 'correct' : 'wrong'}">
+          <span class="review-tag ${isCorrect ? 'correct' : 'wrong'}">문항 ${i+1} · 객관식 · ${isCorrect ? '정답' : '오답'}</span>
+          <div class="review-q">${escHtml(q.q)}</div>
+          ${imgHtml}
+          ${q.choices.map((c, j) => {
+            if (!c.trim()) return '';
+            let cls = '', mark = '';
+            if (j === q.answer) { cls = 'answer'; mark = '<span class="review-mark">정답</span>'; }
+            if (j === myAns && !isCorrect) { cls = 'user-wrong'; mark = '<span class="review-mark">선택한 답</span>'; }
+            return `<div class="review-choice ${cls}">${numerals[j]} ${escHtml(c)}${mark}</div>`;
+          }).join('')}
+        </div>`;
+    }).join('');
+    goto('review');
+  }
+
+  function openImageModal(src) {
+    document.getElementById('imgModalImg').src = src;
+    document.getElementById('imgModal').classList.add('active');
+  }
+  function closeImageModal() {
+    document.getElementById('imgModal').classList.remove('active');
+  }
+
+  loadQuestions();
+</script>
+</body>
+</html>
