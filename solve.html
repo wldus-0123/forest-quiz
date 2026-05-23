@@ -343,28 +343,36 @@
   function renderObjectiveBody(i, q) {
     const numerals = ['①','②','③','④'];
     const selected = playState.answers[i];
-    const answered = selected !== null;
+    const revealed = playState.revealed[i];
     document.getElementById('playBody').innerHTML = `
       <div class="play-choices">
         ${q.choices.map((c, j) => {
           if (!c.trim()) return '';
           let cls = '';
-          if (answered) {
+          if (revealed) {
             if (j === q.answer) cls = 'correct-ans';
             else if (j === selected) cls = 'wrong-ans';
           } else if (selected === j) {
             cls = 'selected';
           }
-          const disabled = answered ? 'style="pointer-events:none;"' : '';
+          const disabled = revealed ? 'style="pointer-events:none;"' : '';
           return `<button class="play-choice ${cls}" onclick="selectChoice(${j})" ${disabled}>
               <span class="number">${numerals[j]}</span><span>${escHtml(c)}</span>
             </button>`;
         }).join('')}
       </div>
-      ${answered && selected !== q.answer ? `<div class="answer-reveal" style="margin-top: 0;">
-        <div class="label-row">◆ 정답</div>
-        <div class="answer-text">${escHtml(q.choices[q.answer])}</div>
-      </div>` : ''}
+      ${revealed ? (selected === q.answer
+        ? `<div class="answer-reveal" style="margin-top: 0;">
+            <div class="label-row">◆ 정답입니다</div>
+            <div class="answer-text">잘했어요!</div>
+            ${q.explain ? `<div class="explain">${escHtml(q.explain)}</div>` : ''}
+          </div>`
+        : `<div class="answer-reveal" style="margin-top: 0;">
+            <div class="label-row">◆ 정답</div>
+            <div class="answer-text">${escHtml(q.choices[q.answer])}</div>
+            ${q.explain ? `<div class="explain">${escHtml(q.explain)}</div>` : ''}
+          </div>`
+      ) : ''}
     `;
     renderPlayFooter();
   }
@@ -401,18 +409,24 @@
     const isLast = i === total - 1;
     const isFirst = i === 0;
     let canProceed = false;
+    let nextLabel = '다음 →';
     if (q.type === 'subjective') {
       canProceed = playState.revealed[i] && playState.selfJudge[i] !== null;
+      nextLabel = isLast ? '결과 보기 →' : '다음 →';
     } else {
       canProceed = playState.answers[i] !== null;
+      if (!playState.revealed[i]) {
+        nextLabel = '정답 확인 →';
+      } else {
+        nextLabel = isLast ? '결과 보기 →' : '다음 →';
+      }
     }
-    const nextLabel = isLast ? '결과 보기 →' : '다음 →';
     const prevBtn = !isFirst ? `<button class="btn" onclick="prevQuestion()">← 이전</button>` : '';
     document.getElementById('playFooter').innerHTML = `${prevBtn}<button class="btn btn-rust" onclick="nextQuestion()" ${canProceed ? '' : 'disabled'} style="flex: 1;">${nextLabel}</button>`;
   }
 
   function selectChoice(idx) {
-    if (playState.answers[playState.current] !== null) return; // 이미 선택됨
+    if (playState.revealed[playState.current]) return; // 이미 공개됨
     playState.answers[playState.current] = idx;
     renderPlayQuestion();
   }
@@ -426,7 +440,14 @@
     if (q.type === 'subjective') {
       if (!playState.revealed[i] || playState.selfJudge[i] === null) return;
     } else {
+      // 객관식: 선택 안 했으면 진행 불가
       if (playState.answers[i] === null) return;
+      // 아직 정답 공개 안 했으면 → 공개만 하고 멈춤
+      if (!playState.revealed[i]) {
+        playState.revealed[i] = true;
+        renderPlayQuestion();
+        return;
+      }
     }
     if (i === quizSet.length - 1) showResult();
     else { playState.current++; renderPlayQuestion(); }
