@@ -362,7 +362,7 @@
 
     <div class="field">
       <label class="label">질문</label>
-      <textarea class="textarea" id="editQ" placeholder="문제를 입력하세요"></textarea>
+      <textarea class="textarea" id="editQ" placeholder="문제를 입력하세요" oninput="editorState.data.q = this.value"></textarea>
     </div>
 
     <div class="field" id="imageField">
@@ -381,11 +381,11 @@
       <div class="answer-box">
         <div class="field" style="margin-bottom: 12px;">
           <label class="label">모범 답안</label>
-          <textarea class="textarea" id="editSubjAnswer" placeholder="학습자가 확인할 정답"></textarea>
+          <textarea class="textarea" id="editSubjAnswer" placeholder="학습자가 확인할 정답" oninput="editorState.data.answer = this.value"></textarea>
         </div>
         <div class="field" style="margin-bottom: 0;">
           <label class="label">해설 (선택)</label>
-          <textarea class="textarea" id="editExplain" placeholder="추가 설명"></textarea>
+          <textarea class="textarea" id="editExplain" placeholder="추가 설명" oninput="editorState.data.explain = this.value"></textarea>
         </div>
       </div>
     </div>
